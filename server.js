@@ -3,57 +3,53 @@ var app = express();
 
 app.use(express.static(__dirname + "/public"));
 
-var adder = function(num1, num2){
-	var result = num1 + num2;
-	return result;
-}
 
-var subtractor = function(num1, num2){
-	var result = num1 - num2;
-	return result;
-}
+const cardList = [
+    {
+        title: "Adder",
+        image: "images/add.jpg",
+        link: "http://localhost:3000/adder?num1=1&num2=2",
+        desciption: "localhost:3000/adder?num1=[number]&num2=[number]"
+    },
+    {
+        title: "Subtractor",
+        image: "images/minus.jpg",
+        link: "http://localhost:3000/subtractor?num1=10&num2=3",
+        desciption: "localhost:3000/subtractor?num1=[number]&num2=[number]"
+    },
+    {
+        title: "Multiplier",
+        image: "images/mul.jpg",
+        link: "http://localhost:3000/multiplier?num1=1&num2=2",
+        desciption: "localhost:3000/multiplier?num1=[number]&num2=[number]"
+    },
+    {
+        title: "Divisor",
+        image: "images/divide.jpg",
+        link: "http://localhost:3000/divisor?num1=1&num2=2",
+        desciption: "localhost:3000/divisor?num1=[number]&num2=[number]"
+    }
+]
 
-var divisor = function(num1, num2){
-	var result = num1 / num2;
-	return result;
-}
+app.get('/api/projects',(req,res) => {
+    res.json({statusCode: 200, data: cardList, message:"Success"})
+})
 
-var multiplier = function(num1, num2){
-	var result = num1 * num2;
-	return result;
-}
+const db = require("./app/models");
+db.mongoose
+  .connect(db.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("Connected to the database!");
+  })
+  .catch(err => {
+    console.log("Cannot connect to the database!", err);
+    process.exit();
+  });
 
-app.get('/adder', function(req, res){
-	var num1 = parseFloat(req.query.num1);
-	var num2 = parseFloat(req.query.num2);
-	var result = adder(num1, num2);
-	res.send('The Result is: ' + result);
-});
-
-app.get('/subtractor', function(req, res){
-	var num1 = parseFloat(req.query.num1);
-	var num2 = parseFloat(req.query.num2);
-	var result = subtractor(num1, num2);
-	res.send('The Result is: ' + result);
-});
-
-app.get('/divisor', function(req, res){
-	var num1 = parseFloat(req.query.num1);
-	var num2 = parseFloat(req.query.num2);
-	if (num2 === 0) {
-		res.send("num2 can't be 0");
-		return false;
-	}
-	var result = divisor(num1, num2);
-	res.send('The Result is: ' + result);
-});
-
-app.get('/multiplier', function(req, res){
-	var num1 = parseFloat(req.query.num1);
-	var num2 = parseFloat(req.query.num2);
-	var result = multiplier(num1, num2);
-	res.send('The Result is: ' + result);
-});
+require("./app/routes/card.routes")(app);
 
 var port = 3000;
 app.listen(port);

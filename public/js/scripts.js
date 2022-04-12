@@ -1,29 +1,11 @@
-const cardList = [
-    {
-        title: "Adder",
-        image: "images/add.jpg",
-        link: "http://localhost:3000/adder?num1=1&num2=2",
-        desciption: "localhost:3000/adder?num1=[number]&num2=[number]"
-    },
-    {
-        title: "Subtractor",
-        image: "images/minus.jpg",
-        link: "http://localhost:3000/subtractor?num1=10&num2=3",
-        desciption: "localhost:3000/subtractor?num1=[number]&num2=[number]"
-    },
-    {
-        title: "Multiplier",
-        image: "images/mul.jpg",
-        link: "http://localhost:3000/multiplier?num1=1&num2=2",
-        desciption: "localhost:3000/multiplier?num1=[number]&num2=[number]"
-    },
-    {
-        title: "Divisor",
-        image: "images/divide.jpg",
-        link: "http://localhost:3000/divisor?num1=1&num2=2",
-        desciption: "localhost:3000/divisor?num1=[number]&num2=[number]"
-    }
-]
+const getProjects = () => {
+    $.get('/api/cards',(response) => {
+        if(response.statusCode==200){
+            addCards(response.data);
+        }
+    })
+}
+
 
 const addCards = (items) => {
     items.forEach(item => {
@@ -44,5 +26,6 @@ const addCards = (items) => {
 $(document).ready(function(){
     $('.materialboxed').materialbox();
     addCards(cardList);
+    getProjects();
     $('.modal').modal();
   });
